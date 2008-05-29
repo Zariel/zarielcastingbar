@@ -3,7 +3,7 @@ local addon = CreateFrame("Frame")
 local parent, castBar
 
 local GetTime = GetTime
-local PlayerName = UnitName("target")
+local UnitName = UnitName
 local UnitCastingInfo = UnitCastingInfo
 local UnitChannelInfo = UnitChannelInfo
 local floor = math.floor
@@ -80,7 +80,7 @@ local OnUpdate = function(self)
 	end
 end
 
-KillBliz = function()
+local KillBliz = function()
 	local dummy = function() end
 	local cb = TargetFrameSpellBar
 	cb:Hide()
@@ -100,7 +100,7 @@ function addon:OnEnable()
 	castBar = CreateFrame("StatusBar", nil, parent)
 	castBar:SetHeight(18)
 	castBar:SetWidth(300)
-	castBar:SetPoint("TOP", oUF.units.player, "BOTTOM", 0, -25)
+	castBar:SetPoint("BOTTOM", oUF.units.target, "TOP", 0, 25)
 	castBar:SetStatusBarTexture(texture)
 	castBar:SetMinMaxValues(0, 1)
 	castBar:SetStatusBarColor(1, 1, 1)
@@ -154,9 +154,9 @@ function addon:OnEnable()
 end
 
 function addon:UNIT_SPELLCAST_SENT(unit, spellName, spellRank, spellTarget)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
-	if not spellTarget then spellTarget = PlayerName end
+	if not spellTarget then spellTarget = UnitName("target") end
 	self.target = spellTarget
 
 	local col
@@ -169,8 +169,9 @@ function addon:UNIT_SPELLCAST_SENT(unit, spellName, spellRank, spellTarget)
 	self.reactColor = UnitReactionColor[col]
 end
 
+
 function addon:UNIT_SPELLCAST_START(unit, spellName, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
 	startTime = startTime/1000
@@ -193,7 +194,7 @@ function addon:UNIT_SPELLCAST_START(unit, spellName, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_DELAYED(unit, spellName, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
 	startTime = startTime/1000
@@ -203,7 +204,7 @@ function addon:UNIT_SPELLCAST_DELAYED(unit, spellName, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_SUCCEEDED(unit)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 	castBar:SetStatusBarColor(0, 1, 0)
 	self.casting = false
 	self.target = nil
@@ -212,7 +213,7 @@ function addon:UNIT_SPELLCAST_SUCCEEDED(unit)
 end
 
 function addon:UNIT_SPELLCAST_STOP(unit, spellName, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	if self.casting then
 		castBar:SetStatusBarColor(1, 0, 0)
@@ -224,7 +225,7 @@ function addon:UNIT_SPELLCAST_STOP(unit, spellName, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_CHANNEL_START(unit, spellName, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	local spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
 	startTime = startTime/1000
@@ -250,7 +251,7 @@ function addon:UNIT_SPELLCAST_CHANNEL_START(unit, spellName, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_CHANNEL_STOP(unit, spellname, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	if self.channeling then
 		self.channeling = false
@@ -261,7 +262,7 @@ function addon:UNIT_SPELLCAST_CHANNEL_STOP(unit, spellname, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_CHANNEL_UPDATE(unit, spellName, spellRank)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 
 	local spell, rank, displayName, icon, startTime, endTime = UnitChannelInfo(unit)
 	startTime = startTime/1000
@@ -272,19 +273,19 @@ function addon:UNIT_SPELLCAST_CHANNEL_UPDATE(unit, spellName, spellRank)
 end
 
 function addon:UNIT_SPELLCAST_FAIED(unit)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 	self:UNIT_SPELLCAST_STOP(unit)
 	castBar:SetStatusBarColor(1, 0, 0)
 end
 
 function addon:UNIT_SPELLCAST_INTERUPTED(unit)
-	if unit ~= "target" then return end
+	if UnitName("target") ~= UnitName(unit) then return end
 	self:UNIT_SPELLCAST_STOP(unit)
 	castBar:SetStatusBarColor(1, 0, 0)
 end
 
 function addon:ADDON_LOADED(arg1)
-	if arg1 == "oUF_Kanne" then
+	if arg1 == "Clayman" then
 		self:UnregisterEvent("ADDON_LOADED")
 		return self:OnEnable()
 	end

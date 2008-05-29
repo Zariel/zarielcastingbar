@@ -80,13 +80,13 @@ local OnUpdate = function(self)
 	end
 end
 
-KillBliz = function()
+local KillBliz = function()
 	local dummy = function() end
 	local cb = CastingBarFrame
 	cb:Hide()
+	cb.Show = dummy
 	cb:UnregisterAllEvents()
 	cb:SetScript("OnUpdate", dummy)
-	cb.Show = dummy
 	cb.RegisterEvent = dummy
 end
 
@@ -284,7 +284,7 @@ function addon:UNIT_SPELLCAST_INTERUPTED(unit)
 end
 
 function addon:ADDON_LOADED(arg1)
-	if arg1 == "oUF_Kanne" then
+	if arg1 == "Clayman" then
 		self:UnregisterEvent("ADDON_LOADED")
 		return self:OnEnable()
 	end
@@ -297,4 +297,3 @@ addon:SetScript("OnEvent", function(self, event, ...)
 end)
 
 addon:RegisterEvent("ADDON_LOADED")
-

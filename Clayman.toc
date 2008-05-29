@@ -1,7 +1,7 @@
 ## Title: Clayman
 ## Author: Zariel
 ## Interface: 20400
-## Notes: Castings bars are cool
+## Notes: Castings bars what are cool
 ## Version: 1
 ## OptionalDeps: oUF_Kanne
 
