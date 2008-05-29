@@ -1,4 +1,4 @@
-## Title: Clayman
+## Title: ZarielCastingBar
 ## Author: Zariel
 ## Interface: 20400
 ## Notes: Castings bars what are cool
