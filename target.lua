@@ -1,4 +1,4 @@
-local print = function(str) return ChatFrame1:AddMessage("Clayman: " .. tostring(str)) end
+local print = function(str) return ChatFrame1:AddMessage("ZarielCastingBar: " .. tostring(str)) end
 local addon = CreateFrame("Frame")
 local parent, castBar
 
@@ -285,7 +285,7 @@ function addon:UNIT_SPELLCAST_INTERUPTED(unit)
 end
 
 function addon:ADDON_LOADED(arg1)
-	if arg1 == "Clayman" then
+	if arg1 == "ZarielCastingBar" then
 		self:UnregisterEvent("ADDON_LOADED")
 		return self:OnEnable()
 	end
