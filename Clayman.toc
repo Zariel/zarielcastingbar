@@ -3,5 +3,7 @@
 ## Interface: 20400
 ## Notes: Castings bars are cool
 ## Version: 1
+## OptionalDeps: oUF_Kanne
 
-core.lua
+player.lua
+target.lua
