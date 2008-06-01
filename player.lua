@@ -9,7 +9,7 @@ local UnitChannelInfo = UnitChannelInfo
 local floor = math.floor
 local format = string.format
 
-local texture = "Interface\\AddOns\\Clayman\\HalG.tga"
+local texture = "Interface\\AddOns\\ZarielCastingBar\\HalG.tga"
 
 local UnitReactionColor = {
 	{ 1.0, 0.0, 0.0 },
@@ -173,6 +173,10 @@ function addon:UNIT_SPELLCAST_START(unit, spellName, spellRank)
 	if unit ~= "player" then return end
 
 	local spell, rank, displayName, icon, startTime, endTime = UnitCastingInfo(unit)
+	if not startTime then
+		self.casting = false
+		return castBar:Hide()
+	end
 	startTime = startTime/1000
 	endTime = endTime/1000
 	self.casting = true
@@ -186,7 +190,11 @@ function addon:UNIT_SPELLCAST_START(unit, spellName, spellRank)
 	castBar:SetAlpha(1)
 	castBar:SetValue(0)
 
-	castBar.name:SetFormattedText("%s --> %s", displayName, self.target)
+	if rank == "" or not self.target then
+		castBar.name:SetText(displayName)
+	else
+		castBar.name:SetFormattedText("%s --> %s", displayName, self.target)
+	end
 
 	castBar:SetStatusBarColor(unpack(self.reactColor))
 	castBar:Show()

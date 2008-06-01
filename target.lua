@@ -9,7 +9,7 @@ local UnitChannelInfo = UnitChannelInfo
 local floor = math.floor
 local format = string.format
 
-local texture = "Interface\\AddOns\\Clayman\\HalG.tga"
+local texture = "Interface\\AddOns\\ZarielCastingBar\\HalG.tga"
 
 local UnitReactionColor = {
 	{ 1.0, 0.0, 0.0 },
@@ -147,10 +147,17 @@ function addon:OnEnable()
 	self:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP")
 	self:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
 	self:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+	self:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 	self:SetScript("OnUpdate", OnUpdate)
 
 	KillBliz()
+end
+
+function addon:PLAYER_TARGET_CHANGED()
+	if UnitCastingInfo("target") then
+		self:UNIT_SPELLCAST_START("target")
+	end
 end
 
 function addon:UNIT_SPELLCAST_SENT(unit, spellName, spellRank, spellTarget)
@@ -166,7 +173,8 @@ function addon:UNIT_SPELLCAST_SENT(unit, spellName, spellRank, spellTarget)
 	else
 		col = UnitReaction("target", "target")
 	end
-	self.reactColor = UnitReactionColor[col]
+
+	self.reactColor = UnitReactionColor[col] or { 1, 0, 0}
 end
 
 
@@ -187,9 +195,14 @@ function addon:UNIT_SPELLCAST_START(unit, spellName, spellRank)
 	castBar:SetAlpha(1)
 	castBar:SetValue(0)
 
+	if not self.target then
+		self.target = UnitName("target")
+	end
+
 	castBar.name:SetFormattedText("%s --> %s", displayName, self.target)
 
-	castBar:SetStatusBarColor(unpack(self.reactColor))
+	--castBar:SetStatusBarColor(unpack(self.reactColor))
+	castBar:SetStatusBarColor(1, 0, 0)
 	castBar:Show()
 end
 
